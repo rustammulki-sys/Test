@@ -1,0 +1,34 @@
+-- LocalScript
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UIS = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+local flying = false
+local speed = 60
+
+local function toggleFly()
+	flying = not flying
+
+	local character = player.Character or player.CharacterAdded:Wait()
+	local root = character:WaitForChild("HumanoidRootPart")
+
+	if flying then
+		local attachment = Instance.new("Attachment")
+		attachment.Name = "FlyAttachment"
+		attachment.Parent = root
+
+		local velocity = Instance.new("LinearVelocity")
+		velocity.Name = "FlyVelocity"
+		velocity.Attachment0 = attachment
+		velocity.MaxForce = math.huge
+		velocity.VectorVelocity = Vector3.zero
+		velocity.Parent = root
+
+		task.spawn(function()
+			while flying and velocity.Parent do
+				local camera = workspace.CurrentCamera
+				local direction = Vector3.zero
+
+				if UIS:IsKeyDown(Enum.KeyCode.W) then direction += camera.CFrame.LookVector end
+				if UIS:IsKeyDown(Enum.KeyCode.S) then direction -= camera.CFrame.Look
